@@ -22,8 +22,8 @@ This is a Korean financial blog built with Spring Boot 3.x. The application prov
 # Run with local profile (uses H2 database)
 mvn spring-boot:run -Dspring-boot.run.profiles=local
 
-# Run with default profile (uses PostgreSQL via DATABASE_URL)
-mvn spring-boot:run
+# Run with production profile (uses PostgreSQL via DATABASE_URL)
+mvn spring-boot:run -Dspring-boot.run.profiles=production
 ```
 
 ### Testing
@@ -60,7 +60,9 @@ mvn clean package -DskipTests
 
 ### Production
 - Uses PostgreSQL via `DATABASE_URL` environment variable
+- Requires `SPRING_PROFILES_ACTIVE=production` environment variable
 - Schema updates automatically via `spring.jpa.hibernate.ddl-auto=update`
+- Optimized logging and performance settings
 
 ## Architecture Overview
 
@@ -123,5 +125,8 @@ mvn clean package -DskipTests
 ### Deployment
 - Configured for Railway.app deployment
 - Requires PostgreSQL database service
+- Environment variables needed:
+  - `DATABASE_URL`: PostgreSQL connection string
+  - `SPRING_PROFILES_ACTIVE=production`: Activates production configuration
 - Uses Nixpacks build system
 - Java 17 runtime specified in `system.properties`

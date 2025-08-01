@@ -2,38 +2,95 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
     <header th:fragment="header">
-        <nav class="bg-white shadow-sm border-b border-gray-200">
+        <nav class="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
                     <div class="flex items-center">
-                        <a href="/" class="text-2xl font-bold text-finance-blue">금융블로그</a>
+                        <a href="/" class="flex items-center space-x-2 group">
+                            <div class="w-8 h-8 bg-gradient-to-br from-finance-blue to-blue-800 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                            </div>
+                            <span class="text-2xl font-bold bg-gradient-to-r from-finance-blue to-blue-800 bg-clip-text text-transparent">
+                                금융블로그
+                            </span>
+                        </a>
                     </div>
                     
+                    <!-- Navigation Menu -->
                     <div class="hidden md:flex items-center space-x-8">
-                        <a href="/" class="text-gray-700 hover:text-finance-blue transition-colors">홈</a>
-                        <a href="/posts" class="text-gray-700 hover:text-finance-blue transition-colors">글 목록</a>
-                        <a href="/about" class="text-gray-700 hover:text-finance-blue transition-colors">소개</a>
-                        <a sec:authorize="hasRole('ADMIN')" href="/admin" class="text-gray-700 hover:text-finance-blue transition-colors">관리자</a>
+                        <a href="/" class="text-gray-700 hover:text-finance-blue transition-colors font-medium relative group">
+                            홈
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-finance-blue transition-all group-hover:w-full"></span>
+                        </a>
+                        <a href="/posts" class="text-gray-700 hover:text-finance-blue transition-colors font-medium relative group">
+                            글 목록
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-finance-blue transition-all group-hover:w-full"></span>
+                        </a>
+                        <a href="/about" class="text-gray-700 hover:text-finance-blue transition-colors font-medium relative group">
+                            소개
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-finance-blue transition-all group-hover:w-full"></span>
+                        </a>
+                        <a sec:authorize="hasRole('ADMIN')" href="/admin" class="text-gray-700 hover:text-finance-blue transition-colors font-medium relative group">
+                            관리자
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-finance-blue transition-all group-hover:w-full"></span>
+                        </a>
                     </div>
                     
+                    <!-- Search & Auth -->
                     <div class="flex items-center space-x-4">
-                        <form action="/search" method="get" class="relative">
+                        <!-- Search -->
+                        <form action="/search" method="get" class="relative hidden sm:block">
                             <input type="text" name="q" placeholder="검색..." 
-                                   class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-finance-blue focus:border-transparent">
-                            <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                   class="w-64 pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-finance-blue focus:border-transparent focus:bg-white transition-all">
+                            <svg class="absolute left-3 top-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </form>
                         
-                        <div sec:authorize="isAnonymous()">
-                            <a href="/login" class="bg-finance-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">로그인</a>
+                        <!-- Mobile search button -->
+                        <button class="sm:hidden p-2 text-gray-600 hover:text-finance-blue transition-colors">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Auth Buttons -->
+                        <div sec:authorize="isAnonymous()" class="flex items-center space-x-2">
+                            <a href="/register" class="text-gray-700 hover:text-finance-blue transition-colors font-medium px-3 py-2">
+                                회원가입
+                            </a>
+                            <a href="/login" class="bg-gradient-to-r from-finance-blue to-blue-700 text-white px-4 py-2.5 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                로그인
+                            </a>
                         </div>
                         
-                        <div sec:authorize="isAuthenticated()">
+                        <div sec:authorize="isAuthenticated()" class="flex items-center space-x-3">
+                            <div class="flex items-center space-x-2 text-gray-700">
+                                <div class="w-8 h-8 bg-gradient-to-br from-finance-blue to-blue-800 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <span class="hidden md:block font-medium" sec:authentication="name">사용자</span>
+                            </div>
                             <form th:action="@{/logout}" method="post" class="inline">
-                                <button type="submit" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">로그아웃</button>
+                                <button type="submit" class="text-gray-600 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                    </svg>
+                                </button>
                             </form>
                         </div>
+                        
+                        <!-- Mobile menu button -->
+                        <button class="md:hidden p-2 text-gray-600 hover:text-finance-blue transition-colors">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>

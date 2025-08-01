@@ -30,10 +30,48 @@
     </script>
     
     <style>
-        body { font-family: 'Pretendard', system-ui, sans-serif; }
+        body { 
+            font-family: 'Pretendard', system-ui, sans-serif; 
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .prose {
+            line-height: 1.75;
+        }
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+            color: #1f2937;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .prose p {
+            margin-bottom: 1.25rem;
+        }
+        .prose strong {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="min-h-screen">
     <!-- Header -->
     <div th:replace="~{layout/header :: header}"></div>
     

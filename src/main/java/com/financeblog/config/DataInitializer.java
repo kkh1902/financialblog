@@ -8,19 +8,29 @@ import com.financeblog.repository.PostRepository;
 import com.financeblog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("local")
-@RequiredArgsConstructor
+@Profile("local")  
 public class DataInitializer implements CommandLineRunner {
     
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
     private final PasswordEncoder passwordEncoder;
+    
+    public DataInitializer(UserRepository userRepository, 
+                          CategoryRepository categoryRepository,
+                          PostRepository postRepository,
+                          @Lazy PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
+        this.postRepository = postRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     
     @Override
     public void run(String... args) throws Exception {

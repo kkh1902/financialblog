@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${post.title} + ' - 금융 블로그'">글 제목 - 금융 블로그</title>
+    <meta name="description" th:content="${post.summary}">
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Breadcrumb -->
+        <nav class="mb-8">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500">
+                <li><a href="/" class="hover:text-finance-blue transition-colors">홈</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li><a th:href="@{/category/{slug}(slug=${post.category.slug})}" 
+                       class="hover:text-finance-blue transition-colors" 
+                       th:text="${post.category.name}">카테고리</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li class="text-gray-900 font-medium" th:text="${post.title}">글 제목</li>
+            </ol>
+        </nav>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Main Content -->
+            <main class="lg:col-span-3">
+                <article class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <!-- Article Header -->
+                    <div class="px-8 py-6 border-b border-gray-100">
+                        <!-- Category & Date -->
+                        <div class="flex items-center justify-between mb-4">
+                            <a th:href="@{/category/{slug}(slug=${post.category.slug})}" 
+                               class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-finance-blue bg-opacity-10 text-finance-blue hover:bg-opacity-20 transition-colors">
+                                <svg class="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span th:text="${post.category.name}">카테고리</span>
+                            </a>
+                            <div class="text-sm text-gray-500">
+                                <time th:datetime="${post.createdAt}" th:text="${#temporals.format(post.createdAt, 'yyyy년 MM월 dd일')}">2024년 1월 15일</time>
+                            </div>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-4" th:text="${post.title}">
+                            글 제목
+                        </h1>
+                        
+                        <!-- Meta Info -->
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <div class="flex items-center space-x-6">
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                    <span>조회 <span th:text="${post.viewCount}">0</span></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span>댓글 <span th:text="${comments.size()}">0</span></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                    <span th:text="${post.author.displayName}">작성자</span>
+                                </div>
+                            </div>
+                            <div th:if="${post.featured}" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                추천글
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Article Content -->
+                    <div class="px-8 py-8">
+                        <div class="prose prose-lg max-w-none">
+                            <div class="text-gray-800 leading-relaxed text-lg whitespace-pre-line" th:text="${post.content}">
+                                글 내용이 여기에 표시됩니다.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tags -->
+                    <div class="px-8 py-4 border-t border-gray-100" th:if="${post.tags != null and !post.tags.isEmpty()}">
+                        <div class="flex flex-wrap gap-2">
+                            <span th:each="tag : ${post.tags}" 
+                                  class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+                                #<span th:text="${tag.name}">태그</span>
+                            </span>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Comments Section -->
+                <div class="mt-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6">
+                        댓글 <span class="text-finance-blue" th:text="${comments.size()}">0</span>개
+                    </h3>
+                    
+                    <!-- Comment Form -->
+                    <form sec:authorize="isAuthenticated()" th:action="@{/api/comments}" method="post" class="mb-8 p-6 bg-gray-50 rounded-xl">
+                        <input type="hidden" name="postId" th:value="${post.id}">
+                        <div class="mb-4">
+                            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">댓글 작성</label>
+                            <textarea id="content" name="content" rows="4" required
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-finance-blue focus:border-transparent resize-none"
+                                      placeholder="댓글을 입력하세요..."></textarea>
+                        </div>
+                        <button type="submit" 
+                                class="bg-finance-blue text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            댓글 작성
+                        </button>
+                    </form>
+                    
+                    <div sec:authorize="isAnonymous()" class="mb-8 p-6 bg-yellow-50 border border-yellow-200 rounded-xl">
+                        <p class="text-yellow-800">
+                            댓글을 작성하려면 <a href="/login" class="font-medium text-finance-blue hover:underline">로그인</a>이 필요합니다.
+                        </p>
+                    </div>
+                    
+                    <!-- Comments List -->
+                    <div class="space-y-6" th:if="${comments != null and !comments.isEmpty()}">
+                        <div th:each="comment : ${comments}" class="border-l-4 border-finance-blue pl-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-medium text-gray-900" th:text="${comment.author.displayName}">작성자</span>
+                                    <time class="text-sm text-gray-500" th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}">2024.01.15 10:30</time>
+                                </div>
+                            </div>
+                            <p class="text-gray-800 leading-relaxed" th:text="${comment.content}">댓글 내용</p>
+                        </div>
+                    </div>
+                    
+                    <div th:if="${comments == null or comments.isEmpty()}" class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <p class="text-gray-500">아직 댓글이 없습니다. 첫 댓글을 남겨보세요!</p>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- Sidebar -->
+            <aside class="space-y-6">
+                <!-- Recent Posts -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">최근 글</h3>
+                    <ul class="space-y-3">
+                        <li th:each="recentPost : ${recentPosts}">
+                            <a th:href="@{/posts/{slug}(slug=${recentPost.slug})}" 
+                               class="block group">
+                                <h4 class="text-sm font-medium text-gray-900 group-hover:text-finance-blue transition-colors line-clamp-2 mb-1"
+                                    th:text="${recentPost.title}">최근 글 제목</h4>
+                                <p class="text-xs text-gray-500" th:text="${#temporals.format(recentPost.createdAt, 'MM.dd')}">01.15</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Categories -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">카테고리</h3>
+                    <ul class="space-y-2">
+                        <li th:each="category : ${categories}">
+                            <a th:href="@{/category/{slug}(slug=${category.slug})}" 
+                               class="flex items-center justify-between text-gray-700 hover:text-finance-blue transition-colors">
+                                <span th:text="${category.name}">카테고리명</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full" 
+                                      th:text="${category.postCount}">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+</body>
+</html>
