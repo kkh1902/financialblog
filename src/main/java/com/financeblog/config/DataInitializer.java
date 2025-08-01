@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("local")  
+@Profile({"local", "production"})  
 public class DataInitializer implements CommandLineRunner {
     
     private final UserRepository userRepository;
