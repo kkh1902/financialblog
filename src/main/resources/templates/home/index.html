@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>홈 - 금융 블로그</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <div class="bg-gradient-to-r from-finance-blue to-blue-800 text-white py-16 rounded-2xl mb-12">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">금융 인사이트를 공유합니다</h1>
+                <p class="text-xl text-blue-100">투자, 저축, 재무 계획에 대한 전문 정보</p>
+            </div>
+        </div>
+        
+        <!-- Featured Posts -->
+        <div class="mb-12" th:if="${featuredPosts != null and !featuredPosts.isEmpty()}">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">추천 글</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <article th:each="post : ${featuredPosts}" class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-finance-blue bg-opacity-10 text-finance-blue text-xs font-medium px-3 py-1 rounded-full" 
+                                  th:text="${post.category.name}">카테고리</span>
+                            <span class="text-gray-500 text-sm" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2024.01.15</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-2 hover:text-finance-blue transition-colors">
+                            <a th:href="@{/posts/{slug}(slug=${post.slug})}" th:text="${post.title}">제목</a>
+                        </h2>
+                        <p class="text-gray-600 mb-4 leading-relaxed line-clamp-3" th:text="${post.summary ?: #strings.abbreviate(post.content, 150)}">
+                            요약
+                        </p>
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-sm text-gray-500">조회 <span th:text="${post.viewCount}">0</span></span>
+                                <span class="text-sm text-gray-500">댓글 <span th:text="${post.comments.size()}">0</span></span>
+                            </div>
+                            <a th:href="@{/posts/{slug}(slug=${post.slug})}" class="text-finance-blue text-sm font-medium hover:underline">
+                                더 읽기 →
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+        
+        <!-- Recent Posts & Sidebar -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Recent Posts -->
+            <div class="lg:col-span-2">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">최신 글</h2>
+                <div class="space-y-6">
+                    <article th:each="post : ${recentPosts}" class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all duration-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <a th:href="@{/category/{slug}(slug=${post.category.slug})}" 
+                               class="bg-gray-100 text-gray-700 text-xs font-medium px-3 py-1 rounded-full hover:bg-gray-200"
+                               th:text="${post.category.name}">카테고리</a>
+                            <span class="text-gray-500 text-sm" th:text="${#temporals.format(post.createdAt, 'yyyy.MM.dd')}">2024.01.15</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">
+                            <a th:href="@{/posts/{slug}(slug=${post.slug})}" th:text="${post.title}" 
+                               class="hover:text-finance-blue transition-colors">제목</a>
+                        </h3>
+                        <p class="text-gray-600 leading-relaxed" th:text="${post.summary ?: #strings.abbreviate(post.content, 100)}">
+                            요약
+                        </p>
+                    </article>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <a href="/posts" class="inline-flex items-center px-6 py-3 bg-finance-blue text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        모든 글 보기
+                        <svg class="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <aside class="space-y-6">
+                <!-- Categories -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">카테고리</h3>
+                    <ul class="space-y-2">
+                        <li th:each="category : ${categories}">
+                            <a th:href="@{/category/{slug}(slug=${category.slug})}" 
+                               class="flex items-center justify-between text-gray-700 hover:text-finance-blue transition-colors">
+                                <span th:text="${category.name}">카테고리명</span>
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full" 
+                                      th:text="${category.postCount}">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- About -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">블로그 소개</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        금융 전문가들이 공유하는 투자와 재테크 정보를 만나보세요. 
+                        초보자부터 전문가까지 모두를 위한 금융 콘텐츠를 제공합니다.
+                    </p>
+                </div>
+            </aside>
+        </div>
+    </div>
+</body>
+</html>
