@@ -45,7 +45,7 @@ public class UserService implements UserDetailsService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .displayName(request.getDisplayName())
-                .role("USER")
+                .userRole(User.Role.USER)
                 .build();
                 
         return userRepository.save(user);
@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .displayName("Administrator")
-                .role("ADMIN")
+                .userRole(User.Role.ADMIN)
                 .build();
                 
         return userRepository.save(admin);
