@@ -32,20 +32,38 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
     
-    @Column(length = 20)
-    @Builder.Default
-    private String role = "USER";
-    
     @Column(name = "display_name", length = 100)
     private String displayName;
+    
+    @Column(length = 50)
+    private String name;
+    
+    @Column(length = 50)
+    private String provider;
+    
+    @Column(name = "provider_id", length = 100)
+    private String providerId;
     
     @Column(name = "created_at")
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
+    @Builder.Default
+    private Role userRole = Role.USER;
+    
+    public enum Role {
+        USER, ADMIN
+    }
+    
+    public Role getRole() {
+        return userRole != null ? userRole : Role.USER;
+    }
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + getRole().name()));
     }
     
     @Override
